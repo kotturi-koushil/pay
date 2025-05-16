@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Razorpay Integration</title>
+</head>
+
+<body>
+    <form method="POST">
+        <label for="amount">Amount:</label>
+        <input type="number" id="amount" name="amount" required>
+        <button type="submit">Pay Now</button>
+    </form>
+
+    {% if order_id %}
+    <button id="rzp-button1">Pay with Razorpay</button>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script>
+        var options = {
+            "key": "{{ key_id }}", // Enter the Key ID generated from the Dashboard
+            "amount": "{{ amount }}", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise or ₹500
+            "currency": "{{ currency }}",
+            "name": "Merchant Name",
+            "description": "Test Transaction",
+            "order_id": "{{ order_id }}",//This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+            "handler": function (response) {
+                alert(response.razorpay_payment_id);
+                alert(response.razorpay_order_id);
+                alert(response.razorpay_signature);
+            },
+            "prefill": {
+                "name": "Gaurav Kumar",
+                "email": "gaurav.kumar@example.com",
+                "contact": "9999999999"
+            },
+            "notes": {
+                "address": "Example Corporate Office"
+            },
+            "theme": {
+                "color": "#3399cc"
+            }
+        };
+        var rzp1 = new Razorpay(options);
+        document.getElementById('rzp-button1').onclick = function (e) {
+            rzp1.open();
+            e.preventDefault();
+        }
+    </script>
+    {% endif %}
+</body>
+
+</html>
